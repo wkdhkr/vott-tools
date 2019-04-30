@@ -18,6 +18,19 @@
     "last 2 versions",
     "not dead"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "*.js": [
+        "eslint --fix",
+        "git add"
+      ]
+    }
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint src/** --ext .ts,.tsx",
@@ -29,8 +42,6 @@
     "watch": "microbundle watch --format es --target node"
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.5.2",
-    "@commitlint/config-conventional": "^7.5.0",
     "@types/fs-extra": "^5.0.5",
     "@types/jest": "^24.0.11",
     "@types/lockfile": "^1.0.1",
