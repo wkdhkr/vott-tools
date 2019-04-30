@@ -22,7 +22,7 @@ describe(Subject.name, () => {
     const spyOn = jest.spyOn(process.stdin, "on");
 
     spySetRawMode.mockImplementation(() => {});
-    spyOn.mockImplementation((e, f: any) => f());
+    spyOn.mockImplementation((_e, f: any) => f());
     subject.setStdInHook(event, cb);
 
     // expect(spySetRawMode).toBeCalledWith(true);

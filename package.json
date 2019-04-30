@@ -31,15 +31,29 @@
       ]
     }
   },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 50,
+        "functions": 50,
+        "lines": 50,
+        "statements": 50
+      }
+    },
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ]
+  },
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "eslint src/** --ext .ts,.tsx",
     "lint:fix": "yarn lint --fix",
     "preversion": "yarn build",
     "clean": "shx rm -rf dist",
     "prebuild": "yarn clean",
-    "build": "microbundle --format cjs --target node",
-    "watch": "microbundle watch --format es --target node"
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.5",
@@ -60,7 +74,6 @@
     "jest": "^24.7.1",
     "lint-staged": "^8.1.5",
     "markdownlint-cli": "^0.15.0",
-    "microbundle": "^0.11.0",
     "prettier": "^1.17.0",
     "shx": "^0.3.2",
     "ts-jest": "^24.0.2",
@@ -70,6 +83,7 @@
     "@types/commander": "^2.12.2",
     "@types/mkdirp": "^0.5.2",
     "@types/mv": "^2.1.0",
+    "@types/node": "^11.13.8",
     "@types/pify": "^3.0.2",
     "@types/recursive-readdir": "^2.2.0",
     "@types/wait-on": "^3.2.0",
@@ -83,6 +97,7 @@
     "mv": "^2.1.1",
     "os-utils": "0.0.14",
     "p-limit": "^2.2.0",
+    "path-exists": "^4.0.0",
     "pify": "^4.0.1",
     "recursive-readdir": "^2.2.2",
     "require-uncached": "^2.0.0",

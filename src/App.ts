@@ -68,7 +68,7 @@ export default class App {
   }
 
   public async run(): Promise<void> {
-    this.log.debug("application start.");
+    this.log.debug("application start!");
     let isError = false;
 
     try {
@@ -91,6 +91,7 @@ export default class App {
     const exitCode = isError ? 1 : 0;
     if (this.config.wait) {
       setTimeout(
+        // eslint-disable-next-line no-console
         () => console.log("\ndone.\nPress any key or two minutes to exit..."),
         500
       );

@@ -19,7 +19,7 @@ export default class Cli {
       .option("-w, --wait", "wait on process end")
       .option("-l, --log-level [level]", "log level")
       .option("-L, --no-log-config", "no log config")
-      .option("-p, --path", "path to process")
+      .option("-p, --path [path]", "path to process")
       .option("-n, --dryrun", "dryrun mode");
   }
 

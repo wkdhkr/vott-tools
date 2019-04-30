@@ -3,7 +3,7 @@ import sleep from "await-sleep";
 import mv from "mv";
 import path from "path";
 // import mkdirp from "mkdirp";
-import { unlink, pathExists } from "fs-extra";
+import fs from "fs-extra";
 import recursiveReadDir from "recursive-readdir";
 import pify from "pify";
 import trash from "trash";
@@ -60,7 +60,7 @@ export default class FileService {
     if (this.config.dryrun) {
       return;
     }
-    await unlink(finalTargetPath);
+    await fs.unlink(finalTargetPath);
     await this.waitDelete(finalTargetPath);
   };
 
@@ -72,7 +72,7 @@ export default class FileService {
     isRetry: boolean = false
   ): Promise<void> {
     const finalTargetPath = this.getSourcePath(targetPath);
-    if (!(await pathExists(finalTargetPath))) {
+    if (!(await fs.pathExists(finalTargetPath))) {
       return;
     }
     try {
@@ -87,7 +87,7 @@ export default class FileService {
     } catch (e) {
       // retry. avoid EBUSY error
       // this.log.warn(e);
-      if (await pathExists(finalTargetPath)) {
+      if (await fs.pathExists(finalTargetPath)) {
         await sleep(200);
         await this.delete(finalTargetPath);
       }
@@ -97,7 +97,7 @@ export default class FileService {
   public waitDelete = async (targetPath: string): Promise<void> => {
     let i = 0;
     // eslint-disable-next-line no-await-in-loop
-    while (await pathExists(targetPath)) {
+    while (await fs.pathExists(targetPath)) {
       // eslint-disable-next-line no-await-in-loop
       await sleep(200);
       i += 1;
@@ -129,7 +129,7 @@ export default class FileService {
     } catch (e) {
       // retry. avoid EBUSY error
       // this.log.warn(e);
-      if (await pathExists(finalFrom)) {
+      if (await fs.pathExists(finalFrom)) {
         await sleep(200);
         await this.rename(finalFrom, finalTo, true);
         return;
