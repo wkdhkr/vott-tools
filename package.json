@@ -1,0 +1,83 @@
+{
+  "name": "vott-tools",
+  "private": true,
+  "author": "wkdhkr",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "bin": {
+    "vott-tools": "./bin/index.js"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "not dead"
+  ],
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint src/** --ext .ts,.tsx",
+    "lint:fix": "yarn lint --fix",
+    "preversion": "yarn build",
+    "clean": "shx rm -rf dist",
+    "prebuild": "yarn clean",
+    "build": "microbundle --format cjs --target node",
+    "watch": "microbundle watch --format es --target node"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.5.2",
+    "@commitlint/config-conventional": "^7.5.0",
+    "@types/fs-extra": "^5.0.5",
+    "@types/jest": "^24.0.11",
+    "@types/lockfile": "^1.0.1",
+    "@types/react": "^16.8.14",
+    "@types/touch": "^3.1.1",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "codecov": "^3.3.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jest": "^22.5.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "husky": "^2.1.0",
+    "jest": "^24.7.1",
+    "lint-staged": "^8.1.5",
+    "markdownlint-cli": "^0.15.0",
+    "microbundle": "^0.11.0",
+    "prettier": "^1.17.0",
+    "shx": "^0.3.2",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/mkdirp": "^0.5.2",
+    "@types/mv": "^2.1.0",
+    "@types/pify": "^3.0.2",
+    "@types/recursive-readdir": "^2.2.0",
+    "@types/wait-on": "^3.2.0",
+    "await-sleep": "0.0.1",
+    "commander": "^2.20.0",
+    "fs-extra": "^7.0.1",
+    "lockfile": "^1.0.4",
+    "log4js": "^4.1.0",
+    "max-listeners-exceeded-warning": "0.0.1",
+    "mkdirp": "^0.5.1",
+    "mv": "^2.1.1",
+    "os-utils": "0.0.14",
+    "p-limit": "^2.2.0",
+    "pify": "^4.0.1",
+    "recursive-readdir": "^2.2.2",
+    "require-uncached": "^2.0.0",
+    "touch": "^3.1.0",
+    "trash": "^5.2.0",
+    "wait-on": "^3.2.0",
+    "winattr": "^3.0.0"
+  }
+}

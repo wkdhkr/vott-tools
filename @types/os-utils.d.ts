@@ -1,0 +1,14 @@
+export function allLoadavg(): any;
+export function cpuCount(): any;
+export function cpuFree(callback: any): void;
+export function cpuUsage(callback: any): void;
+export function freeCommand(callback: any): void;
+export function freemem(): any;
+export function freememPercentage(): any;
+export function getProcesses(nProcess: any, callback: any): void;
+export function harddrive(callback: any): void;
+export function loadavg(_time: any): any;
+export function platform(): any;
+export function processUptime(): any;
+export function sysUptime(): any;
+export function totalmem(): any;

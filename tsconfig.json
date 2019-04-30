@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "*": ["./@types/*"], "@app/": ["src/"] },
+    "module": "esnext",
+    "esModuleInterop": true,
+    "target": "es6",
+    "lib": ["es6", "es7", "dom"],
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "./bin"]
+}
