@@ -16,7 +16,7 @@ const log4jsConfig: Configuration = {
       type: "dateFile",
       filename: path.join(
         EnvironmentHelper.getHomeDir(),
-        ".dedupper",
+        `.${EnvironmentHelper.getAppName()}`,
         "log",
         "process"
       ),

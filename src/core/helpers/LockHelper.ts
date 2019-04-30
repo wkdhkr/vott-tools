@@ -2,6 +2,7 @@ import sleep from "await-sleep";
 import os from "os";
 import path from "path";
 import lockFile from "lockfile";
+import EnvironmentHelper from "./EnvironmentHelper";
 
 export default class LockHelper {
   private static keyLockMap: { [s: string]: true } = {};
@@ -11,7 +12,8 @@ export default class LockHelper {
   }
 
   private static getLockFilePath(name: string): string {
-    return path.join(os.tmpdir(), `dedupper.${name}.lock`);
+    const appName = EnvironmentHelper.getAppName();
+    return path.join(os.tmpdir(), `${appName}.${name}.lock`);
   }
 
   public static async lockKey(key: string): Promise<void> {
