@@ -19,6 +19,8 @@ export default class Cli {
       .option("-w, --wait", "wait on process end")
       .option("-l, --log-level [level]", "log level")
       .option("-L, --no-log-config", "no log config")
+      .option("-S, --search-mode [mode]", "search mode")
+      .option("-Q, --search-query [query]", "search query")
       .option("-p, --path [path]", "path to process")
       .option("-f, --fix-hash", "fix old version hash")
       .option("-n, --dryrun", "dryrun mode");

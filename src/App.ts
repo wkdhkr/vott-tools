@@ -80,7 +80,6 @@ export default class App {
     await this.close(isError);
   }
 
-
   private close(isError: boolean) {
     const exitCode = isError ? 1 : 0;
     if (this.config.wait) {

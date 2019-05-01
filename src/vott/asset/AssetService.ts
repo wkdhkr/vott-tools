@@ -1,7 +1,7 @@
 import { Logger } from "log4js";
 import MD5 from "md5.js";
 import requireUncached from "require-uncached";
-import { join } from "path";
+import { join, normalize } from "path";
 import { Config } from "../../types";
 import { IAssetMetadata } from "../../types/vott";
 import StringHelper from "../helpers/StringHelper";
@@ -22,16 +22,20 @@ export default class AssetService {
     this.fs = new FileService(config);
   }
 
-  public async read(target?: string): Promise<IAssetMetadata> {
+  public async read(target?: string): Promise<IAssetMetadata | null> {
     const finalPath = target || this.config.path;
+    if (AssetHelper.isAssetFileName(finalPath) === false) {
+      this.log.debug(`is not asset file. skip. path=${finalPath}`);
+      return null;
+    }
     const content: IAssetMetadata = await requireUncached(finalPath);
     return content;
   }
 
-  private calculateHash(target: string) {
-    const finalPath = target || this.config.path;
+  public calculateHash(target?: string) {
+    const finalPath = normalize(target || this.config.path);
     const normalizedPath = finalPath.toLowerCase();
-    let filePath = target;
+    let filePath = finalPath;
     // If the path is not already prefixed with a protocol
     // then assume it comes from the local file system
     if (
@@ -42,26 +46,39 @@ export default class AssetService {
       // First replace \ character with / the do the standard url encoding then encode unsupported characters
       filePath = StringHelper.encodeFileURI(finalPath, true);
     }
-    const md5Hash: string = new MD5().update(filePath).digest("hex");
+    const md5Hash: string = new MD5()
+      .update(AssetHelper.removeFilePrefix(filePath))
+      .digest("hex");
+
     return md5Hash;
+  }
+
+  public async getWrapper(target?: string) {
+    const finalPath = target || this.config.path;
+    const meta = await this.read(finalPath);
+    if (meta) {
+      return new AssetWrapper(meta);
+    }
+    return null;
   }
 
   public async fixOldVersionHash(target?: string): Promise<void> {
     const finalPath = target || this.config.path;
-    if (AssetHelper.isAssetFileName(finalPath) === false) {
-      this.log.debug(`is not asset file. skip. path=${finalPath}`);
+    const aw = await this.getWrapper(finalPath);
+    if (!aw) {
       return;
     }
-    const meta = await this.read(target);
-    const am = new AssetWrapper(meta);
-    const calculatedHash = this.calculateHash(am.getPath());
-    if (calculatedHash === am.getId()) {
+    const calculatedHash = this.calculateHash(aw.getPath());
+    if (calculatedHash === aw.getId()) {
       this.log.debug(`correct hash detected. path=${finalPath}`);
       return;
     }
     this.log.warn(`incorrect hash detected. path=${finalPath}`);
+    const meta = aw.getMeta();
     meta.asset.id = calculatedHash;
-    await this.write(meta);
+    if (aw.isTagged()) {
+      await this.write(meta);
+    }
     await this.fs.delete(target);
   }
 

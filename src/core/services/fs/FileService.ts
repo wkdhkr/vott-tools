@@ -144,7 +144,7 @@ export default class FileService {
     const finalTarget = this.getSourcePath(target);
     if (!this.config.dryrun) {
       if (isObject(content)) {
-        await fs.writeJSON(finalTarget, content);
+        await fs.writeJSON(finalTarget, content, { spaces: 4 });
       } else {
         await fs.writeFile(finalTarget, content);
       }

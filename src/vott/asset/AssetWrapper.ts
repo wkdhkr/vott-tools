@@ -1,10 +1,15 @@
 import { AssetState, IAssetMetadata, IRegion } from "../../types/vott";
+import AssetHelper from "../helpers/AssetHelper";
 
 export default class AssetWrapper {
   private meta: IAssetMetadata;
 
   public constructor(meta: IAssetMetadata) {
     this.meta = meta;
+  }
+
+  public getMeta() {
+    return { ...this.meta };
   }
 
   public getId() {
@@ -20,7 +25,11 @@ export default class AssetWrapper {
   }
 
   public getNoPrefixPath(): string {
-    return this.getPath().replace(/^file:/, "");
+    return AssetHelper.removeFilePrefix(this.getPath());
+  }
+
+  public getPrefixPath(): string {
+    return AssetHelper.preparePrefix(this.getPath());
   }
 
   public getState(): AssetState {

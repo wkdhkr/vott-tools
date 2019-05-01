@@ -17,6 +17,12 @@ type KnownKeys<T> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RequiredOnly<T extends Record<any, any>> = Pick<T, KnownKeys<T>>;
 
+export enum SearchMode {
+  file = "file",
+  hash = "hash",
+  tag = "tag"
+}
+
 export enum LogLevel {
   ALL = "ALL",
   MARK = "MARK",
@@ -57,6 +63,10 @@ export interface CommanderConfig extends RequiredOnly<program.CommanderStatic> {
   logLevel?: LogLevel;
   /** use log config */
   logConfig: boolean;
+  /** search mode */
+  searchMode?: SearchMode;
+  /** search query */
+  searchQuery?: string;
   /** fix old version hash */
   fixHash?: boolean;
 }

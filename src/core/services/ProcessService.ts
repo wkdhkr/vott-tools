@@ -10,6 +10,8 @@ import LoggerHelper from "../helpers/LoggerHelper";
 import FileService from "./fs/FileService";
 import { Config } from "../../types";
 import AssetService from "../../vott/asset/AssetService";
+import ProjectService from "../../vott/project/ProjectService";
+import SearchService from "../../vott/SearchService";
 
 export default class ProcessService {
   private log: Logger;
@@ -21,6 +23,10 @@ export default class ProcessService {
   private fileService: FileService;
 
   private assetService: AssetService;
+
+  private projectService: ProjectService;
+
+  private searchService: SearchService;
 
   public constructor(config: Config, path: string, isParent: boolean = true) {
     let { dryrun } = config;
@@ -38,6 +44,8 @@ export default class ProcessService {
     this.log = this.config.getLogger(this);
     this.fileService = new FileService(this.config);
     this.assetService = new AssetService(this.config);
+    this.projectService = new ProjectService(this.config);
+    this.searchService = new SearchService(this.config);
   }
 
   public async process(): Promise<boolean> {
@@ -77,6 +85,10 @@ export default class ProcessService {
   private async processRegularFile() {
     if (this.config.fixHash) {
       await this.assetService.fixOldVersionHash();
+      await this.projectService.fixOldVersionHash();
+    }
+    if (this.config.searchMode) {
+      await this.searchService.check();
     }
     return true;
   }
