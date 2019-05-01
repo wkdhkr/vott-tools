@@ -38,7 +38,7 @@ const defaultConfig: DefaultConfig = {
   log4jsConfig,
   dummyPath: "?",
   defaultLogLevel: LogLevel.DEBUG,
-  defaultPath: ".",
+  path: ".",
   maxCpuLoadPercent: 60,
   maxWorkers: os.cpus().length
 };

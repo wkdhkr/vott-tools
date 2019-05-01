@@ -57,14 +57,7 @@ export default class App {
     }
     this.log = this.config.getLogger(this);
 
-    if (this.config.path) {
-      this.processService = new ProcessService(this.config, this.config.path);
-    } else {
-      this.processService = new ProcessService(
-        this.config,
-        this.config.defaultPath
-      );
-    }
+    this.processService = new ProcessService(this.config, this.config.path);
   }
 
   public async run(): Promise<void> {
@@ -86,6 +79,7 @@ export default class App {
 
     await this.close(isError);
   }
+
 
   private close(isError: boolean) {
     const exitCode = isError ? 1 : 0;

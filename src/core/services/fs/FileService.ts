@@ -9,6 +9,7 @@ import pify from "pify";
 import trash from "trash";
 
 import { Logger } from "log4js";
+import { isObject } from "util";
 import AttributeService from "./AttributeService";
 import { Config } from "../../../types";
 
@@ -135,6 +136,18 @@ export default class FileService {
         return;
       }
       throw e;
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async write(content: string | Record<string, any>, target?: string) {
+    const finalTarget = this.getSourcePath(target);
+    if (!this.config.dryrun) {
+      if (isObject(content)) {
+        await fs.writeJSON(finalTarget, content);
+      } else {
+        await fs.writeFile(finalTarget, content);
+      }
     }
   }
 }

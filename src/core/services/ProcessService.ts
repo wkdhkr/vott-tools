@@ -9,6 +9,7 @@ import QueueHelper from "../helpers/QueueHelper";
 import LoggerHelper from "../helpers/LoggerHelper";
 import FileService from "./fs/FileService";
 import { Config } from "../../types";
+import AssetService from "../../vott/asset/AssetService";
 
 export default class ProcessService {
   private log: Logger;
@@ -18,6 +19,8 @@ export default class ProcessService {
   public isParent: boolean;
 
   private fileService: FileService;
+
+  private assetService: AssetService;
 
   public constructor(config: Config, path: string, isParent: boolean = true) {
     let { dryrun } = config;
@@ -34,6 +37,7 @@ export default class ProcessService {
 
     this.log = this.config.getLogger(this);
     this.fileService = new FileService(this.config);
+    this.assetService = new AssetService(this.config);
   }
 
   public async process(): Promise<boolean> {
@@ -70,9 +74,12 @@ export default class ProcessService {
     return results;
   }
 
-  private processRegularFile = () => {
+  private async processRegularFile() {
+    if (this.config.fixHash) {
+      await this.assetService.fixOldVersionHash();
+    }
     return true;
-  };
+  }
 
   private async processFile(): Promise<boolean> {
     // TODO: config

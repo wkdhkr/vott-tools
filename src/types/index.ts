@@ -33,11 +33,12 @@ export interface DefaultConfig {
   log4jsConfig: Configuration;
   dummyPath: string;
   defaultLogLevel: LogLevel;
-  defaultPath: string;
   /** When cpu load exceeds this value, program will wait to process the next file. */
   maxCpuLoadPercent: number;
   /** Number of concurrent executions. */
   maxWorkers: number;
+  /** target to process */
+  path: string;
 }
 
 // export interface UserConfig extends Partial<DefaultConfig> {}
@@ -56,8 +57,8 @@ export interface CommanderConfig extends RequiredOnly<program.CommanderStatic> {
   logLevel?: LogLevel;
   /** use log config */
   logConfig: boolean;
-  /** target to process */
-  path?: string;
+  /** fix old version hash */
+  fixHash?: boolean;
 }
 
 export interface Config extends DefaultConfig, CommanderConfig {
