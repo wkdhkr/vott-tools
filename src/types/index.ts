@@ -23,6 +23,11 @@ export enum SearchMode {
   tag = "tag"
 }
 
+export enum ClearMode {
+  tag = "tag",
+  state = "state"
+}
+
 export enum LogLevel {
   ALL = "ALL",
   MARK = "MARK",
@@ -67,6 +72,8 @@ export interface CommanderConfig extends RequiredOnly<program.CommanderStatic> {
   searchMode?: SearchMode;
   /** search query */
   searchQuery?: string;
+  /** clear mode */
+  clearMode?: ClearMode;
   /** fix old version hash */
   fixHash?: boolean;
 }

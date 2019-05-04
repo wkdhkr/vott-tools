@@ -67,7 +67,7 @@ export default class SearchService {
     return isHitEntire;
   }
 
-  public async check(): Promise<boolean> {
+  public async run(): Promise<boolean> {
     const aw = await this.as.getWrapper();
     if (aw) {
       return this.checkAsset(aw);

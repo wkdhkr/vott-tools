@@ -2,7 +2,7 @@ import { join } from "path";
 import fs from "fs-extra";
 import { Logger } from "log4js";
 import { Config } from "../../types";
-import { IProject, IAsset } from "../../types/vott";
+import { IProject, IAsset, AssetState } from "../../types/vott";
 import ProjectWrapper from "./ProjectWrapper";
 import AssetService from "../asset/AssetService";
 import FileService from "../../core/services/fs/FileService";
@@ -36,6 +36,7 @@ export default class ProjectService {
 
   public async getWrapper(target?: string) {
     const finalPath = target || this.config.path;
+    this.log.trace(`get pj wrapper path=${finalPath}`);
     const pj = await this.read(finalPath);
     if (pj) {
       return new ProjectWrapper(pj);
@@ -73,5 +74,21 @@ export default class ProjectService {
     const finalDestPath = join(finalDestDirPath, fileName);
     await this.fs.write(project, finalDestPath);
     this.log.info(`write correct hash file. path=${finalDestPath}`);
+  }
+
+  public async resetAssetById(id: string) {
+    const pw = await this.getWrapper();
+    if (!pw) {
+      throw new Error("project file not found");
+    }
+    const assets = pw.getAssets();
+    const asset = assets[id];
+    if (!asset) {
+      return;
+    }
+    // asset.state = AssetState.NotVisited;
+    delete assets[id];
+    pw.setAssets(assets);
+    await this.write(pw.getProject());
   }
 }

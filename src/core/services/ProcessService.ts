@@ -12,8 +12,12 @@ import { Config } from "../../types";
 import AssetService from "../../vott/asset/AssetService";
 import ProjectService from "../../vott/project/ProjectService";
 import SearchService from "../../vott/SearchService";
+import ClearService from "../../vott/ClearService";
+import LockHelper from "../helpers/LockHelper";
 
 export default class ProcessService {
+  private static LOCK_KEY = "process-service";
+
   private log: Logger;
 
   private config: Config;
@@ -27,6 +31,8 @@ export default class ProcessService {
   private projectService: ProjectService;
 
   private searchService: SearchService;
+
+  private clearService: ClearService;
 
   public constructor(config: Config, path: string, isParent: boolean = true) {
     let { dryrun } = config;
@@ -46,10 +52,12 @@ export default class ProcessService {
     this.assetService = new AssetService(this.config);
     this.projectService = new ProjectService(this.config);
     this.searchService = new SearchService(this.config);
+    this.clearService = new ClearService(this.config);
   }
 
   public async process(): Promise<boolean> {
     let result;
+    await LockHelper.unlockProcess();
     if (await this.fileService.isDirectory()) {
       result = (await this.processDirectory()).every(Boolean);
     } else {
@@ -88,7 +96,10 @@ export default class ProcessService {
       await this.projectService.fixOldVersionHash();
     }
     if (this.config.searchMode) {
-      await this.searchService.check();
+      await this.searchService.run();
+    }
+    if (this.config.clearMode) {
+      await this.clearService.run();
     }
     return true;
   }
@@ -99,10 +110,11 @@ export default class ProcessService {
       await QueueHelper.waitOperationWaitPromises();
     }
     await ProcessHelper.waitCpuIdle(this.config.maxCpuLoadPercent);
-    await QueueHelper.waitOperationWaitPromises();
     try {
-      // TODO: implement
-      return this.processRegularFile();
+      await LockHelper.lockKey(ProcessService.LOCK_KEY);
+      const result = await this.processRegularFile();
+      await LockHelper.unlockKey(ProcessService.LOCK_KEY);
+      return result;
     } catch (e) {
       if (EnvironmentHelper.isTest()) {
         // eslint-disable-next-line no-console
@@ -110,6 +122,8 @@ export default class ProcessService {
       }
       this.log.fatal(e);
       return false;
+    } finally {
+      await LockHelper.unlockKey(ProcessService.LOCK_KEY);
     }
   }
 }

@@ -13,7 +13,7 @@ export default class EnvironmentHelper {
   }
 
   public static getAppName(): string {
-    return process.env.npm_package_name || "unknown";
+    return process.env.npm_package_name || "vott-tools";
   }
 
   private static detectUserConfigPath(): string {

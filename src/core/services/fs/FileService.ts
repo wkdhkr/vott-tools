@@ -150,4 +150,11 @@ export default class FileService {
       }
     }
   }
+
+  public async readDir(target?: string) {
+    const finalTarget = this.getSourcePath(target);
+    const dirPath = this.getDirPath(finalTarget);
+    this.log.trace(`readdir path=${dirPath}`);
+    return fs.readdir(dirPath);
+  }
 }

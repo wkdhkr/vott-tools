@@ -1,7 +1,7 @@
 import { Logger } from "log4js";
 import MD5 from "md5.js";
 import requireUncached from "require-uncached";
-import { join, normalize } from "path";
+import { join } from "path";
 import { Config } from "../../types";
 import { IAssetMetadata } from "../../types/vott";
 import StringHelper from "../helpers/StringHelper";

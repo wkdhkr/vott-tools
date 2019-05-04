@@ -40,12 +40,13 @@ export default class LockHelper {
   }
 
   public static async lockProcess(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       lockFile.lock(
         this.getLockFilePath("process"),
         {
           wait: Infinity,
-          pollPeriod: 1000
+          pollPeriod: 1000,
+          retries: 5
         },
         err => {
           if (err) {
