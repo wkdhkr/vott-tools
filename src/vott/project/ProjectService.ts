@@ -24,20 +24,31 @@ export default class ProjectService {
     this.log = config.getLogger(this);
   }
 
-  public async read(target?: string): Promise<IProject> {
+  public async read(target?: string): Promise<IProject | null> {
     const finalPath = target || this.config.path;
+    if (ProjectHelper.isProjectFileName(finalPath) === false) {
+      this.log.debug(`is not asset file. skip. path=${finalPath}`);
+      return null;
+    }
     const content: IProject = JSON.parse(await fs.readFile(finalPath, "utf-8"));
     return content;
   }
 
+  public async getWrapper(target?: string) {
+    const finalPath = target || this.config.path;
+    const pj = await this.read(finalPath);
+    if (pj) {
+      return new ProjectWrapper(pj);
+    }
+    return null;
+  }
+
   public async fixOldVersionHash(target?: string) {
     const finalPath = target || this.config.path;
-    if (ProjectHelper.isProjectFileName(finalPath) === false) {
-      // this.log.debug(`is not project file. skip. path=${finalPath}`);
+    const pw = await this.getWrapper(finalPath);
+    if (!pw) {
       return;
     }
-    const project = await this.read();
-    const pw = new ProjectWrapper(project);
     const assets = pw.getAssets();
 
     const fixedAssets: { [index: string]: IAsset } = {};

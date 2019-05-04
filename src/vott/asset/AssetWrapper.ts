@@ -49,6 +49,7 @@ export default class AssetWrapper {
   }
 
   public isTagged() {
-    return Boolean(this.getState() === AssetState.Tagged);
+    // return Boolean(this.getState() === AssetState.Tagged);
+    return Boolean(this.getRegions().length);
   }
 }

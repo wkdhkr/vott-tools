@@ -32,8 +32,10 @@ export default class AssetService {
     return content;
   }
 
-  public calculateHash(target?: string) {
-    const finalPath = normalize(target || this.config.path);
+  public calculateHash(target: string) {
+    const finalPath = StringHelper.normalizeSlashes(
+      AssetHelper.removeFilePrefix(target.replace(/\//g, "\\"))
+    );
     const normalizedPath = finalPath.toLowerCase();
     let filePath = finalPath;
     // If the path is not already prefixed with a protocol
@@ -46,9 +48,12 @@ export default class AssetService {
       // First replace \ character with / the do the standard url encoding then encode unsupported characters
       filePath = StringHelper.encodeFileURI(finalPath, true);
     }
-    const md5Hash: string = new MD5()
-      .update(AssetHelper.removeFilePrefix(filePath))
-      .digest("hex");
+
+    const finalHashSource = filePath;
+    const md5 = (src: string): string => new MD5().update(src).digest("hex");
+    const md5Hash = md5(finalHashSource);
+
+    this.log.trace(`src=${target} hash=${md5(finalHashSource)}`);
 
     return md5Hash;
   }
