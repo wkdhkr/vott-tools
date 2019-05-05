@@ -2,7 +2,7 @@ import { join } from "path";
 import fs from "fs-extra";
 import { Logger } from "log4js";
 import { Config } from "../../types";
-import { IProject, IAsset, AssetState } from "../../types/vott";
+import { IProject, IAsset } from "../../types/vott";
 import ProjectWrapper from "./ProjectWrapper";
 import AssetService from "../asset/AssetService";
 import FileService from "../../core/services/fs/FileService";

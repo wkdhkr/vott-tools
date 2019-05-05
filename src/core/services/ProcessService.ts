@@ -14,6 +14,7 @@ import ProjectService from "../../vott/project/ProjectService";
 import SearchService from "../../vott/SearchService";
 import ClearService from "../../vott/ClearService";
 import LockHelper from "../helpers/LockHelper";
+import StatisticsService from "../../vott/StatisticService";
 
 export default class ProcessService {
   private static LOCK_KEY = "process-service";
@@ -34,6 +35,8 @@ export default class ProcessService {
 
   private clearService: ClearService;
 
+  private statisticsService: StatisticsService;
+
   public constructor(config: Config, path: string, isParent: boolean = true) {
     let { dryrun } = config;
     if (EnvironmentHelper.isTest()) {
@@ -53,6 +56,7 @@ export default class ProcessService {
     this.projectService = new ProjectService(this.config);
     this.searchService = new SearchService(this.config);
     this.clearService = new ClearService(this.config);
+    this.statisticsService = new StatisticsService(this.config);
   }
 
   public async process(): Promise<boolean> {
@@ -65,6 +69,7 @@ export default class ProcessService {
     }
     await QueueHelper.waitOperationWaitPromises();
     if (this.isParent) {
+      this.statisticsService.finish();
       await LoggerHelper.flush();
     }
     return result;
@@ -100,6 +105,9 @@ export default class ProcessService {
     }
     if (this.config.clearMode) {
       await this.clearService.run();
+    }
+    if (this.config.statistics) {
+      await this.statisticsService.run();
     }
     return true;
   }

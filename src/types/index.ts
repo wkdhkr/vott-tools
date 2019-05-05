@@ -74,6 +74,8 @@ export interface CommanderConfig extends RequiredOnly<program.CommanderStatic> {
   searchQuery?: string;
   /** clear mode */
   clearMode?: ClearMode;
+  /** show statistics */
+  statistics?: boolean;
   /** fix old version hash */
   fixHash?: boolean;
 }
