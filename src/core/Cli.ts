@@ -25,6 +25,7 @@ export default class Cli {
       .option("-p, --path [path]", "path to process")
       .option("-f, --fix-hash", "fix old version hash")
       .option("-c, --clear-mode [mode]", "clearing invalid asset(tag)")
+      .option("-t, --tag-sort", "sort tag")
       .option("-n, --dryrun", "dryrun mode");
   }
 

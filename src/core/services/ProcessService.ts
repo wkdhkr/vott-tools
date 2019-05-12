@@ -109,6 +109,9 @@ export default class ProcessService {
     if (this.config.statistics) {
       await this.statisticsService.run();
     }
+    if (this.config.tagSort) {
+      await this.projectService.sortTag();
+    }
     return true;
   }
 

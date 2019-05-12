@@ -76,6 +76,8 @@ export interface CommanderConfig extends RequiredOnly<program.CommanderStatic> {
   clearMode?: ClearMode;
   /** show statistics */
   statistics?: boolean;
+  /** tag sort */
+  tagSort?: boolean;
   /** fix old version hash */
   fixHash?: boolean;
 }

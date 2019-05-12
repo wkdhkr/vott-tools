@@ -27,7 +27,7 @@ export default class ProjectService {
   public async read(target?: string): Promise<IProject | null> {
     const finalPath = target || this.config.path;
     if (ProjectHelper.isProjectFileName(finalPath) === false) {
-      this.log.debug(`is not asset file. skip. path=${finalPath}`);
+      // this.log.debug(`is not pj file. skip. path=${finalPath}`);
       return null;
     }
     const content: IProject = JSON.parse(await fs.readFile(finalPath, "utf-8"));
@@ -36,7 +36,7 @@ export default class ProjectService {
 
   public async getWrapper(target?: string) {
     const finalPath = target || this.config.path;
-    this.log.trace(`get pj wrapper path=${finalPath}`);
+    // this.log.trace(`get pj wrapper path=${finalPath}`);
     const pj = await this.read(finalPath);
     if (pj) {
       return new ProjectWrapper(pj);
@@ -44,9 +44,24 @@ export default class ProjectService {
     return null;
   }
 
+  public async sortTag(target?: string) {
+    const pw = await this.getWrapper(target);
+    if (!pw) {
+      return;
+    }
+    const sortedTags = pw
+      .getProject()
+      .tags.slice()
+      .sort((a, b) => (a.name > b.name ? 1 : -1));
+    const pj = pw.getProject();
+    pj.tags = sortedTags;
+    this.log.trace(pj.tags);
+    await this.write(pj);
+    this.log.info("tag sort done.");
+  }
+
   public async fixOldVersionHash(target?: string) {
-    const finalPath = target || this.config.path;
-    const pw = await this.getWrapper(finalPath);
+    const pw = await this.getWrapper(target);
     if (!pw) {
       return;
     }
