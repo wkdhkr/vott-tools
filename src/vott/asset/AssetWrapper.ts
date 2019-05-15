@@ -28,6 +28,10 @@ export default class AssetWrapper {
     return AssetHelper.removeFilePrefix(this.getPath());
   }
 
+  public getRealPath(): string {
+    return decodeURI(this.getNoPrefixPath());
+  }
+
   public getPrefixPath(): string {
     return AssetHelper.preparePrefix(this.getPath());
   }

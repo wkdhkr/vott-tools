@@ -24,18 +24,11 @@ export default class ClearService {
     this.log = this.config.getLogger(this);
   }
 
-  public async run() {
-    const aw = await this.as.getWrapper();
-    if (!aw) {
-      return;
-    }
+  private async runTagMode(aw: AssetWrapper) {
     if (this.config.clearMode === ClearMode.tag) {
       const isInvalid = this.checkAsset(aw);
       if (isInvalid) {
         const projectFilePath = await this.detectProjectFilePath();
-        if (!projectFilePath) {
-          throw new Error("project file not found.");
-        }
         const ps = new ProjectService({
           ...this.config,
           path: projectFilePath
@@ -50,6 +43,39 @@ export default class ClearService {
         ]);
       }
     }
+  }
+
+  private async runFileMode(aw: AssetWrapper) {
+    if (this.config.clearMode === ClearMode.file) {
+      const filePath = aw.getRealPath();
+      if (!(await this.fs.as.isExists(filePath))) {
+        this.log.warn(
+          `image file not found. id=${aw.getId()} path=${aw.getPath()}`
+        );
+        const ps = new ProjectService({
+          ...this.config,
+          path: await this.detectProjectFilePath()
+        });
+        await Promise.all([
+          ps.resetAssetById(aw.getId()),
+          this.fs.delete(this.config.path)
+        ]);
+      } else {
+        /*
+        this.log.debug(
+          `image file found. id=${aw.getId()} path=${aw.getPath()}`
+        );
+        */
+      }
+    }
+  }
+
+  public async run() {
+    const aw = await this.as.getWrapper();
+    if (!aw) {
+      return;
+    }
+    Promise.all([this.runTagMode(aw), this.runFileMode(aw)]);
   }
 
   private async detectProjectFilePath() {

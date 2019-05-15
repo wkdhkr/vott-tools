@@ -25,7 +25,8 @@ export enum SearchMode {
 
 export enum ClearMode {
   tag = "tag",
-  state = "state"
+  state = "state",
+  file = "file"
 }
 
 export enum LogLevel {

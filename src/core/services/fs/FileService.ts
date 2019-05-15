@@ -21,7 +21,7 @@ export default class FileService {
 
   private config: Config;
 
-  private as: AttributeService;
+  public as: AttributeService;
 
   public getSourcePath: (targetPath?: string) => string;
 
